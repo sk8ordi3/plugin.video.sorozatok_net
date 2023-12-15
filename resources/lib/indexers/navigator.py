@@ -30,21 +30,11 @@ sysaddon = sys.argv[0]
 syshandle = int(sys.argv[1])
 addonFanart = xbmcaddon.Addon().getAddonInfo('fanart')
 
-import platform
-import xml.etree.ElementTree as ET
-
-os_info = platform.platform()
+version = xbmcaddon.Addon().getAddonInfo('version')
 kodi_version = xbmc.getInfoLabel('System.BuildVersion')
+base_log_info = f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}'
 
-current_directory = os.path.dirname(os.path.abspath(__file__))
-parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_directory)))
-addon_xml_path = os.path.join(parent_directory, "addon.xml")
-
-tree = ET.parse(addon_xml_path)
-root = tree.getroot()
-version = root.attrib.get("version")
-
-xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info}', xbmc.LOGINFO)
+xbmc.log(f'{base_log_info}', xbmc.LOGINFO)
 
 base_url = 'https://sorozatok.net'
 
@@ -131,7 +121,7 @@ class navigator:
                 next_page_url = f'{base_url}{next_page_link}'
                 self.addDirectoryItem('[I]Következő oldal[/I]', f'items&url={quote_plus(next_page_url)}', '', 'DefaultFolder.png')
         except (AttributeError, requests.exceptions.ConnectionError):
-            xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info} | getItems | next_page_url | csak egy oldal található', xbmc.LOGINFO)
+            xbmc.log(f'{base_log_info}| getItems | next_page_url | csak egy oldal található', xbmc.LOGINFO)
         
         self.endDirectory('movies')
 
@@ -160,7 +150,7 @@ class navigator:
                 next_page_url = f'{base_url}{next_page_link}'
                 self.addDirectoryItem('[I]Következő oldal[/I]', f'items&url={quote_plus(next_page_url)}', '', 'DefaultFolder.png')
         except (AttributeError, requests.exceptions.ConnectionError):
-            xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info} | getSeriesItems | next_page_url | csak egy oldal található', xbmc.LOGINFO)
+            xbmc.log(f'{base_log_info}| getSeriesItems | next_page_url | csak egy oldal található', xbmc.LOGINFO)
 
         self.endDirectory('movies')
 
@@ -280,16 +270,16 @@ class navigator:
 
     def playMovie(self, url):
         
-        xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info} | playMovie | url | {url}', xbmc.LOGINFO)
+        xbmc.log(f'{base_log_info}| playMovie | url | {url}', xbmc.LOGINFO)
         
         try:
             direct_url = urlresolver.resolve(url)
             
-            xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info} | playMovie | direct_url: {direct_url}', xbmc.LOGINFO)
+            xbmc.log(f'{base_log_info}| playMovie | direct_url: {direct_url}', xbmc.LOGINFO)
             play_item = xbmcgui.ListItem(path=direct_url)
             xbmcplugin.setResolvedUrl(syshandle, True, listitem=play_item)
         except:
-            xbmc.log(f'Sorozatok.net | v{version} | Kodi: {kodi_version[:5]}| OS: {os_info} | playMovie | name: No video sources found', xbmc.LOGINFO)
+            xbmc.log(f'{base_log_info}| playMovie | name: No video sources found', xbmc.LOGINFO)
             notification = xbmcgui.Dialog()
             notification.notification("Sorozatok.net", "Törölt tartalom", time=5000)
 

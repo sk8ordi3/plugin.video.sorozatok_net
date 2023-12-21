@@ -106,8 +106,9 @@ class navigator:
             page_url = video_div.find('a', class_='clip-link')['href']
             card_link = f'{base_url}{page_url}'
             
-            img = video_div.find('img', class_='sorozat-listazo')['src']
-            img_url = re.findall(r'&url=(.*)', img)[0].strip()
+            img_url = video_div.find('img', class_='sorozat-listazo')['src']
+            if img_url.startswith('//') and not img_url.startswith('https:'):
+                img_url = 'https:' + img_url
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -135,8 +136,9 @@ class navigator:
             page_url = video_div.find('a', class_='clip-link')['href']
             card_link = f'{base_url}{page_url}'
             
-            img = video_div.find('img', class_='sorozat-listazo')['src']
-            img_url = re.findall(r'&url=(.*)', img)[0].strip()
+            img_url = video_div.find('img', class_='sorozat-listazo')['src']
+            if img_url.startswith('//') and not img_url.startswith('https:'):
+                img_url = 'https:' + img_url
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -168,8 +170,10 @@ class navigator:
 
         img_tag = soup.find('img', class_='profile-image')
         if img_tag:
-            img_src = img_tag['src']
-            img_url = re.findall(r'url=(.*)', img_src)[0].strip()
+            img_url = img_tag['src']
+
+            if img_url.startswith('//') and not img_url.startswith('https:'):
+                img_url = 'https:' + img_url
 
         year = re.findall(r'<b>Év:.*?(\d+).*', str(soup))[0].strip()
 
@@ -269,9 +273,7 @@ class navigator:
         self.endDirectory('series')
 
     def playMovie(self, url):
-        
         xbmc.log(f'{base_log_info}| playMovie | url | {url}', xbmc.LOGINFO)
-        
         try:
             direct_url = urlresolver.resolve(url)
             

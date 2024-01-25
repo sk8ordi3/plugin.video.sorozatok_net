@@ -3,6 +3,8 @@
 
 Kodi kiegészítő a sorozatok.net-hez
 
+1.0.3 - img_url, quote_plus fix
+
 1.0.2 - img scrape változás lekövetése
 
 1.0.1 - os verzió kiszedése

@@ -228,7 +228,7 @@ class navigator:
                     hun_title = episode["title"]
                     ep_link = episode["link"]
                     
-                    self.addDirectoryItem(f'[B]{hun_title}[/B]', f'extract_episodes&url={quote_plus(ep_link)}&img_url={img_url}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=True, meta={'title': hun_title, 'plot': content})
+                    self.addDirectoryItem(f'[B]{hun_title}[/B]', f'extract_episodes&url={quote_plus(ep_link)}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=True, meta={'title': hun_title, 'plot': content})
 
         self.endDirectory('series')    
 
@@ -268,7 +268,7 @@ class navigator:
                 resp_4 = requests.head(videoplayback_url_hash, allow_redirects=True)
                 final_url = f'{resp_4.url}'
                 
-                self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={final_url}&img_url={img_url}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
+                self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={final_url}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
 
         self.endDirectory('series')
 

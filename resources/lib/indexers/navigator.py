@@ -106,7 +106,11 @@ class navigator:
             page_url = video_div.find('a', class_='clip-link')['href']
             card_link = f'{base_url}{page_url}'
             
-            img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
+            try:
+                img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
+            except IndexError:    
+                img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
+                img_url = f'https:{img_url}'
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -134,7 +138,11 @@ class navigator:
             page_url = video_div.find('a', class_='clip-link')['href']
             card_link = f'{base_url}{page_url}'
             
-            img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
+            try:
+                img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
+            except IndexError:    
+                img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
+                img_url = f'https:{img_url}'
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -164,7 +172,10 @@ class navigator:
         series_en_title_tag = soup.find('p', class_='profile-location')
         series_en_title = series_en_title_tag.text.strip() if series_en_title_tag else None
 
-        img_url = re.findall(r';url=(.*jpg)', str(soup))[0].strip()
+        try:
+            img_url = re.findall(r';url=(.*jpg)', str(soup))[0].strip()
+        except IndexError:
+            img_url = re.findall(r'<meta\s+content=\"([^\"]+)\"\s+property=\"og:image\">', str(soup))[0].strip()
 
         year = re.findall(r'<b>Év:.*?(\d+).*', str(soup))[0].strip()
 

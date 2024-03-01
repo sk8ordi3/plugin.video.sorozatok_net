@@ -1,3 +1,5 @@
+[B]1.0.4[/B]
+- borítók forrásának lekövetése
 [B]1.0.3[/B]
 - img_url, quote_plus fix
 [B]1.0.2[/B]

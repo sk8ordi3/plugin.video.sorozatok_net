@@ -3,6 +3,8 @@
 
 Kodi kiegészítő a sorozatok.net-hez
 
+1.0.5 - borítók forrásának lekövetése, új video linkek kezelése
+
 1.0.4 - borítók forrásának lekövetése
 
 1.0.3 - img_url, quote_plus fix

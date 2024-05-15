@@ -109,8 +109,12 @@ class navigator:
             try:
                 img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
             except IndexError:    
-                img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
-                img_url = f'https:{img_url}'
+                try:
+                    img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
+                    img_url = f'https:{img_url}'
+                except IndexError:
+                    img_url = re.findall(r'<img.*alt=.*\"(.*?\.jpg)', str(video_div))[0].strip()
+                    img_url = f'{base_url}{img_url}'
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -141,8 +145,12 @@ class navigator:
             try:
                 img_url = re.findall(r'<img.*(https://sorozatok.*jpg).*</img>', str(video_div))[0].strip()
             except IndexError:    
-                img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
-                img_url = f'https:{img_url}'
+                try:
+                    img_url = re.findall(r'<img.*\"(//.*jpg)\".*</img>', str(video_div))[0].strip()
+                    img_url = f'https:{img_url}'
+                except IndexError:
+                    img_url = re.findall(r'<img.*alt=.*\"(.*?\.jpg)', str(video_div))[0].strip()
+                    img_url = f'{base_url}{img_url}'
             
             year = video_div.find('span', class_='timer').text.strip()
             hun_title = video_div.find('h4', class_='video-title').text.strip()
@@ -269,6 +277,10 @@ class navigator:
                 
                 resp_4 = requests.head(videoplayback_url_hash, allow_redirects=True)
                 final_url = f'{resp_4.url}'
+                
+                if 'bembed' in final_url:
+                    resp_5 = requests.get(final_url, allow_redirects=True)
+                    final_url = f'{resp_5.url}'
                 
                 self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={final_url}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
 

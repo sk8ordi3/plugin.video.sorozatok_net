@@ -282,7 +282,11 @@ class navigator:
                     resp_5 = requests.get(final_url, allow_redirects=True)
                     final_url = f'{resp_5.url}'
                 
-                self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={final_url}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
+                if 'voe' in final_url:
+                    resp_6 = requests.get(final_url, allow_redirects=False)
+                    final_url = f'{resp_6.url}'
+                
+                self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={quote_plus(final_url)}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
 
         self.endDirectory('series')
 

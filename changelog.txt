@@ -1,3 +1,5 @@
+[B]1.0.6[/B]
+- video link quote_plus fix
 [B]1.0.5[/B]
 - borítók forrásának lekövetése, új video linkek kezelése
 [B]1.0.4[/B]

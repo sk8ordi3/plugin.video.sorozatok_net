@@ -283,28 +283,8 @@ class navigator:
                     final_url = f'{resp_5.url}'
                 
                 if 'voe' in final_url:
-                    
-                    import requests
-                    
-                    headers = {
-                        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-                        'accept-language': 'hu,en;q=0.9',
-                        'priority': 'u=0, i',
-                        'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Brave";v="126"',
-                        'sec-ch-ua-mobile': '?0',
-                        'sec-ch-ua-platform': '"Windows"',
-                        'sec-fetch-dest': 'document',
-                        'sec-fetch-mode': 'navigate',
-                        'sec-fetch-site': 'none',
-                        'sec-fetch-user': '?1',
-                        'sec-gpc': '1',
-                        'upgrade-insecure-requests': '1',
-                        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-                    }
-                    
-                    resp_6 = requests.get(final_url, headers=headers).text
-                    
-                    final_url = re.findall(r"window.location.href.*(https://.*/e/.*)'", str(resp_6))[0].strip()
+                    resp_6 = requests.get(final_url, allow_redirects=False)
+                    final_url = f'{resp_6.url}'
                 
                 self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={quote_plus(final_url)}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
 

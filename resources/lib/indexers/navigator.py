@@ -253,39 +253,57 @@ class navigator:
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
         }
         
-        response_1 = requests.get(url, headers=headers_1).text
-        
-        url_id = re.findall(r'watch.*v=(.*)', url)[0].strip()
-        find_embed_id = re.findall(r'data-id=\"(.*?)\".*'+url_id+'', str(response_1))[0].strip()
-        embed_go = f'https://sorozatok.net/go.php?id={find_embed_id}&key={url_id}'
-        
-        import requests
-        
-        resp_2 = requests.head(embed_go, allow_redirects=True)
-        streamplay_url = f'{resp_2.url}'
-        
+        try:
+            response_1 = requests.get(url, headers=headers_1).text
+            
+            url_id = re.findall(r'watch.*v=(.*)', url)[0].strip()
+            find_embed_id = re.findall(r'data-id=\"(.*?)\".*'+url_id+'', str(response_1))[0].strip()
+            embed_go = f'https://sorozatok.net/go.php?id={find_embed_id}&key={url_id}'
+            
+            resp_2 = requests.head(embed_go, allow_redirects=True)
+            streamplay_url = f'{resp_2.url}'
+            
+            resp_3 = requests.get(streamplay_url).text
+        except Exception as e:
+            xbmc.log(f'Sorozatok.net hiba: {e}', xbmc.LOGERROR)
+            return
+
         def hunter(h, u, n, t, e, r):
-            return bytes(int(''.join(str(n.index(c))for c in s), e) - t for s in h.split(n[e]) if s).decode('utf-8')
-        
-        resp_3 = requests.get(streamplay_url).text
-        
+            try:
+                separator = n[e]
+                parts = h.split(separator)
+                decoded_bytes = []
+                for part in parts:
+                    if not part: continue
+                    val = 0
+                    for char in part:
+                        if char in n:
+                            val = val * e + n.index(char)
+                    result_char_code = val - t
+                    decoded_bytes.append(result_char_code)
+                return bytes(decoded_bytes).decode('utf-8')
+            except:
+                return ""
+
         hunter_pattern = r"decodeURIComponent\(escape\(r\)\)\}(.*?)\)</script>"
-        player_pattern = r'"(/videoplayback.php\?hash=(.*?))"'
-        for f in re.findall(hunter_pattern, resp_3):
-            if m := re.search(player_pattern, hunter(*eval(f))):
-                videoplayback_url_hash = 'https://streamplay.pw' + m.group(1)
+        player_pattern = r'(https?://.*?/videoplayback\.php\?hash=[a-zA-Z0-9]+)'
+        matches = re.findall(hunter_pattern, resp_3, re.DOTALL)
+        for f in matches:
+            args = eval(f.strip())
+            decoded_source = hunter(*args)
+
+            if m := re.search(player_pattern, decoded_source):
+                videoplayback_url = m.group(1)
+                resp_4 = requests.head(videoplayback_url, allow_redirects=True)
                 
-                resp_4 = requests.head(videoplayback_url_hash, allow_redirects=True)
                 final_url = f'{resp_4.url}'
-                
                 if 'bembed' in final_url:
                     resp_5 = requests.get(final_url, allow_redirects=True)
                     final_url = f'{resp_5.url}'
-                
                 if 'voe' in final_url:
                     resp_6 = requests.get(final_url, allow_redirects=False)
                     final_url = f'{resp_6.url}'
-                
+
                 self.addDirectoryItem(f'[B]{hun_title}[/B]', f'play_movie&url={quote_plus(final_url)}&img_url={quote_plus(img_url)}&hun_title={hun_title}&content={content}', img_url, 'DefaultMovies.png', isFolder=False, meta={'title': hun_title, 'plot': content})
 
         self.endDirectory('series')
